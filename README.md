@@ -1,2 +1,5 @@
 # Projektowanie_wspomagane_komputerem
-Projekt (algorytm genetyczny) na zajęcia z Projektowania wspomaganego komputerem(UJ)
+### Algorytm genetyczny
+Projekt na zajęcia z Projektowania wspomaganego komputerem(UJ)
+
+Program generuje losowe pokolenie psów, a następnie stara się uzyskac jedną wybraną rasę.
