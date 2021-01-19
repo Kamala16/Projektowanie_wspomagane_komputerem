@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>three.js webgl - geometry - extrude shapes</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link type="text/css" rel="stylesheet" href="main.css">
+    <style>
+        .button{
+            border: none;
+            color:black;
+            padding: 16px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            transition-duration: 0.4s;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <button id="btnKoniec" class="button">KONIEC</button>
+    <button id="btn1" class="button" >1 Pokolenie</button>
+    <button id="btn10" class="button" >10 Pokoleń</button>
+    <button id="btn100" class="button" >100 Pokoleń</button>
+    <script type="module">
+
+        import * as THREE from 'https://unpkg.com/three/build/three.module.js';
+
+        import { TrackballControls } from 'https://unpkg.com/three/examples/jsm/controls/TrackballControls.js';
+        import { init, animate, show, draw, drawLast } from './rysowanie.js'
+        import { corgi, jamnik, husky, samoyed } from './rasy.js'
+        import { individual } from './losowanie.js'
+        import { fit, rate } from './ocena.js'
+        import { selekcja, mutacja, krzyzowanie } from './operatory.js'      
+        
+        init();
+        animate();
+
+        var wielkoscPokolenia = 100
+        let rasa = samoyed()
+        let gen = firstGeneration(wielkoscPokolenia)
+        show(gen)
+        
+        main(gen)
+        
+        function main(gen){
+            var end = false
+            document.getElementById("btnKoniec").addEventListener("click", function(){end = koniec(end, gen)});
+            document.getElementById("btn1").addEventListener("click", function(){pokolenie(gen)});
+            document.getElementById("btn10").addEventListener("click", function(){pokolenie10(gen)});
+            document.getElementById("btn100").addEventListener("click", function(){pokolenie100(gen)});
+        }
+        
+        function deleteButtons(){
+            document.body.removeChild(document.getElementById("btnKoniec"))
+            document.body.removeChild(document.getElementById("btn1"))
+            document.body.removeChild(document.getElementById("btn10"))
+            document.body.removeChild(document.getElementById("btn100"))
+        }
+
+        function firstGeneration(max){
+            const generation = []
+            for(var i=0; i < max; i++){
+                generation.push(individual())
+            }
+            return generation
+        }
+
+        function koniec(end, gen){
+            end = true
+            if(end){
+                rate(gen, rasa)
+                gen = selekcja(gen)
+                deleteButtons()
+            }
+        }
+
+        function pokolenie(gen){
+            rate(gen, rasa)
+            gen = selekcja(gen)
+            gen = krzyzowanie(gen)
+            for(var dog of gen){
+                var czyMutacja = (Math.random() > 0.9) ? 1 : 0
+                if(czyMutacja){
+                    dog = mutacja(dog)
+                }
+            }
+            show(gen)
+        }
+
+        function pokolenie10(gen){
+            for(var i = 0; i < 10; i++){
+                rate(gen, rasa)
+                gen = selekcja(gen)
+                gen = krzyzowanie(gen)
+                for(var dog of gen){
+                    var czyMutacja = (Math.random() > 0.9) ? 1 : 0
+                        if(czyMutacja){
+                            dog = mutacja(dog)
+                        }
+                }
+            }
+            show(gen)
+        }
+
+        function pokolenie100(){
+            for(var i = 0; i < 100; i++){
+                console.log(1)
+                rate(gen, rasa)
+                gen = selekcja(gen)
+                gen = krzyzowanie(gen)
+                for(var dog of gen){
+                    var czyMutacja = (Math.random() > 0.9) ? 1 : 0
+                        if(czyMutacja){
+                            dog = mutacja(dog)
+                        }
+                }
+            }
+            show(gen)
+        }
+              
+
+    </script>
+
+</body>
+
+</html>
